@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 #region  Ocelot
 var configurationFile = "ocelot.json";
-if (environment == "Development") configurationFile = "ocelot-dev.json";
+//if (environment == "Development") configurationFile = "ocelot-dev.json";
 builder.Configuration.AddJsonFile(configurationFile, optional: false, reloadOnChange: true);
 builder.Services.AddOcelot(builder.Configuration)
     .AddPolly();

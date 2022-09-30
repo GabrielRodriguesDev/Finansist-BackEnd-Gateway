@@ -11,7 +11,7 @@
     "Routes": [
         {
         "DownstreamPathTemplate": "/{everything}",
-        "DownstreamScheme": "http",
+        "DownstreamScheme": "ws",
         "RateLimitOptions": {
             "EnableRateLimiting": true,
             "Period": "3m",
@@ -24,7 +24,7 @@
                 "Port": 80
             }
         ],
-        "UpstreamPathTemplate": "/Teste/{everything}",
+        "UpstreamPathTemplate": "/{everything}",
         "UpstreamHttpMethod": [  
             "GET",
             "POST",

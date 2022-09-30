@@ -11,7 +11,7 @@ metadata:
   labels:                                 
     app: finansist-gateway              
 spec:                                     
-  replicas: 3    
+  replicas: 1    
   revisionHistoryLimit: 1
   selector:                               
     matchLabels:                          
@@ -23,17 +23,18 @@ spec:
     spec:                     
       containers:             
         - name: finansist-gateway      
-          image: "gabrielrodriguesdev/finansist-backend-gateway:latest"
+          # image: "gabrielrodriguesdev/finansist-backend-gateway:latest"
+          image: "desenvolvedortrdev/finansist-backend-gateway:latest"
           ports:
           - containerPort: 80
           resources:
             limits:
-              memory: 100Mi
-              cpu: "1"
+              memory: "50Mi"
+              cpu: "50m"
             requests:
-              memory: 10Mi
-              cpu: "0.2"
---- 
+              memory: "10Mi"
+              cpu: "30m"
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,6 +52,32 @@ spec:
 
 ---
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  namespace: finansist
+  name: ingress-finansist-gateway
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: balanced
+spec:
+  rules:
+  - host: "finansist.trdev.com.br"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          serviceName: finansist-service-gateway
+          servicePort: 80
+  tls:
+  - hosts:
+    - "trdev.com.br"
+    - "*.trdev.com.br"
+    secretName: letsencrypt-tls
+
 # apiVersion: autoscaling/v1
 # kind: HorizontalPodAutoscaler
 # metadata:
@@ -67,28 +94,28 @@ spec:
 
 ---
 
-apiVersion: networking.k8s.io/v1                                    
-kind: Ingress                                                                 
-metadata:                                                                     
-  namespace: finansist                                                       
-  name: ingress-finansist-gateway                                                       
-  annotations:                                                               
-    kubernetes.io/ingress.class: "nginx"                                                               
-    nginx.ingress.kubernetes.io/affinity-mode: balanced                      
-spec:                                                                        
-  rules:                                                                     
-  #- host: "api.finansist.com.br"                                        
-    - http:                                                                    
-        paths:                                                                 
-        - path: /
-          pathType: Prefix                                                     
-          backend:                                                             
-            service: 
-              name: finansist-service-gateway
-              port:
-                number: 80
-  # tls:
-  # - hosts:
-  #   - "finansist.com.br"
-  #   - "*.finansist.com.br"
-  #   secretName: letsencrypt-tls
+# apiVersion: networking.k8s.io/v1                                    
+# kind: Ingress                                                                 
+# metadata:                                                                     
+#   namespace: finansist                                                       
+#   name: ingress-finansist-gateway                                                       
+#   annotations:                                                               
+#     kubernetes.io/ingress.class: "nginx"                                                               
+#     nginx.ingress.kubernetes.io/affinity-mode: balanced                      
+# spec:                                                                        
+#   rules:                                                                     
+#   #- host: "api.finansist.com.br"                                        
+#     - http:                                                                    
+#         paths:                                                                 
+#         - path: /
+#           pathType: Prefix                                                     
+#           backend:                                                             
+#             service: 
+#               name: finansist-service-gateway
+#               port:
+#                 number: 80
+#   # tls:
+#   # - hosts:
+#   #   - "finansist.com.br"
+#   #   - "*.finansist.com.br"
+#   #   secretName: letsencrypt-tls
