@@ -1,0 +1,37 @@
+{
+    "GlobalConfiguration": {
+        "RateLimitOptions": {
+            "ClientIdHeader": "ClientId",
+            "QuotaExceededMessage": "Error",
+            "RateLimitCounterPrefix": "finansist",
+            "DisableRateLimitHeaders": false,
+            "HttpStatusCode": 429
+        }
+    },
+    "Routes": [
+        {
+        "DownstreamPathTemplate": "/{everything}",
+        "DownstreamScheme": "ws",
+
+        "DownstreamHostAndPorts": [
+            {
+                "Host":"localhost",
+                "Port": 7144
+            }
+        ],
+        "UpstreamPathTemplate": "/{everything}",
+        "UpstreamHttpMethod": [  
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+        ],
+        "HttpHandlerOptions": {
+            "AllowAutoRedirect": true,
+            "UseCookieContainer": true,
+            "UseTracing": true
+        },
+        "DangerousAcceptAnyServerCertificateValidator": true
+    }]
+}

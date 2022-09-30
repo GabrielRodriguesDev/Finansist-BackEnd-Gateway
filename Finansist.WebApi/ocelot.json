@@ -1,0 +1,42 @@
+{
+    "GlobalConfiguration": {
+        "RateLimitOptions": {
+            "ClientIdHeader": "ClientId",
+            "QuotaExceededMessage": "{\"message\":\"Voc\u00ea est\u00e1 fazendo muitas requisi\u00e7\u00f5es, por favor tente novamente mais tarde\",\"success\":false}",
+            "RateLimitCounterPrefix": "finansist",
+            "DisableRateLimitHeaders": false,
+            "HttpStatusCode": 429
+        }
+    },
+    "Routes": [
+        {
+        "DownstreamPathTemplate": "/{everything}",
+        "DownstreamScheme": "http",
+        "RateLimitOptions": {
+            "EnableRateLimiting": true,
+            "Period": "3m",
+            "PeriodTimespan": 120,
+            "Limit": 100
+        },
+        "DownstreamHostAndPorts": [
+            {
+                "Host":"finansist-service.finansist.svc.cluster.local",
+                "Port": 80
+            }
+        ],
+        "UpstreamPathTemplate": "/Teste/{everything}",
+        "UpstreamHttpMethod": [  
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+        ],
+        "HttpHandlerOptions": {
+            "AllowAutoRedirect": true,
+            "UseCookieContainer": true,
+            "UseTracing": true
+        },
+        "DangerousAcceptAnyServerCertificateValidator": true
+    }]
+}
